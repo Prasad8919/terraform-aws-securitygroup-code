@@ -1,0 +1,20 @@
+resource "aws_security_group" "allow_tls" {
+  name        = local.sg_name_final
+  description = var.sg_description
+  vpc_id      = var.vpc_id
+
+   dynamic "ingress" {
+    for_each = var.ingress_rules
+    content {
+        from_port       = ingress.value["from_port"]
+        to_port         = ingress.value["to_port"]
+        protocol        = ingress.value["protocol"]
+        cidr_blocks = ingress.value["cidr_blocks"]
+    }
+  }
+
+
+  tags = {
+    Name = "allow_tls"
+  }
+}
